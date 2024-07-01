@@ -1,101 +1,134 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { handleDescription } from "@commune-ts/ui/discord-widget";
-
-import { applicationsList } from "../../../utils/applications-list";
-import Animation from "../animation/index";
-import { CountUpArea } from "../count-up-area";
+import { applicationsList } from "~/utils/applications-list";
+import Animation from "../animation";
 
 export function HeroSection(): JSX.Element {
+  const [triggerAnimation, setTriggerAnimation] = useState(false);
+
+  const handleButtonClick = () => {
+    setTriggerAnimation(!triggerAnimation);
+  };
   return (
-    <div
-      className="flex w-full flex-col justify-center overflow-hidden text-gray-400"
-      id="hero"
-    >
-      <div className="flex flex-col lg:flex-row">
-        <div className="z-10 flex w-full flex-col justify-between border-gray-500 bg-[url('/bg-pattern.svg')] lg:max-w-[60%] lg:border-r">
-          <div className="flex h-full flex-col justify-center space-y-4 border-b border-gray-500 px-8">
-            <div className="flex w-full py-16 lg:justify-end">
-              <div className="flex w-full flex-col justify-between lg:max-w-4xl xl:pl-10">
-                <p className="text-xl font-medium">
-                  <span className="text-green-400">Peer-to-peer </span>
-                  Incentivized coordination network.
-                </p>
+    <div id="hero" className="flex justify-center">
+      <div
+        className={`animate-fade transition duration-700 animate-delay-700 ${triggerAnimation ? "opacity-70" : "opacity-100"}`}
+      >
+        <Animation />
+      </div>
+      <div className="flex h-full w-full max-w-screen-2xl flex-col">
+        {!triggerAnimation ? (
+          <div className="flex h-full min-h-[85vh] w-full flex-col justify-end gap-6 px-4 pb-12 md:flex-row md:items-end md:justify-between md:pb-0">
+            <div className="flex h-full w-fit flex-col items-start text-gray-400 lg:max-w-4xl">
+              <p className="animate-fade-right font-medium animate-delay-200 md:text-xl">
+                <span className="text-green-400">Peer-to-peer </span>
+                Incentivized coordination network.
+              </p>
+              <Image
+                alt="Commune ai logo"
+                className="w-full animate-fade-right py-4 animate-delay-300"
+                height={100}
+                src="/logo-asci.svg"
+                width={200}
+              />
+              <p className="animate-fade-right animate-delay-500 md:mt-1 md:text-lg">
+                Protocol and Market System for Incentive-driven Coordination of
+                Decentralized AI.
+              </p>
+              <p className="animate-fade-right animate-delay-500 md:text-lg">
+                Fully community driven, no bureaucracy, no team, no pre-mine.
+                Only code and contributors.
+              </p>
+            </div>
+            <div className="flex w-full gap-3 md:w-fit">
+              <button
+                onClick={handleButtonClick}
+                className="relative inline-flex w-full animate-fade-up items-center justify-center gap-2 border border-white/20 bg-[#898989]/5 px-4 py-2 text-gray-400 backdrop-blur-md transition duration-300 animate-delay-500 hover:border-green-500 hover:bg-green-500/10 md:w-fit"
+              >
                 <Image
-                  alt="Commune ai logo"
-                  className="w-full py-4"
-                  height={100}
-                  src="/logo-asci.svg"
-                  width={200}
+                  src="/join-community.svg"
+                  alt="link icon"
+                  width={20}
+                  height={20}
                 />
-                <p className="mt-1 text-lg">
-                  Protocol and Market System for Incentive-driven Coordination
-                  of Decentralized AI.
+                <span className="text-nowrap">JOIN COMMUNITY</span>
+              </button>
+              <button
+                onClick={handleButtonClick}
+                className="relative inline-flex w-full animate-fade-up items-center justify-center gap-2 border border-white/20 bg-[#898989]/5 px-4 py-2 text-gray-400 backdrop-blur-md transition duration-300 animate-delay-500 hover:border-green-500 hover:bg-green-500/10 md:w-fit"
+              >
+                <Image
+                  src="/view-more.svg"
+                  alt="link icon"
+                  width={20}
+                  height={20}
+                />
+                <span className="text-nowrap">VIEW MORE</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex h-full min-h-[85vh] w-full flex-col items-end justify-between px-4 pt-12">
+            <button
+              onClick={handleButtonClick}
+              className="relative inline-flex animate-fade-down items-center justify-center gap-3 border border-white/20 bg-[#898989]/5 px-4 py-2 text-gray-400 backdrop-blur-md transition duration-300 animate-delay-200 hover:border-green-500 hover:bg-green-500/10"
+            >
+              <Image
+                src="/view-more.svg"
+                alt="link icon"
+                width={20}
+                height={20}
+                className="rotate-180"
+              />
+              <span className="text-nowrap">GO BACK</span>
+            </button>
+            <div className="flex w-full flex-col items-center justify-center gap-6">
+              <div className="flex flex-col items-center gap-1">
+                <h1 className="animate-fade-down text-5xl text-white">
+                  Welcome to the <span className="text-green-500">commune</span>
+                </h1>
+                <p className="animate-fade-down text-xl text-white">
+                  A place for permission-less and censorship resistant
+                  cooperation.
                 </p>
-                <p className="text-lg">
-                  Fully community driven, no bureaucracy, no team, no pre-mine.
-                  Only code and contributors.
-                </p>
+              </div>
+              <div className="flex w-full max-w-screen-2xl animate-fade-up flex-col gap-6 lg:flex-row">
+                {applicationsList.map((app, index) => {
+                  return (
+                    <Link
+                      key={index}
+                      href={app.href}
+                      target={app.target ? app.target : "_self"}
+                      className="flex w-full flex-col border border-white/20 bg-[#898989]/5 p-8 backdrop-blur-md transition duration-300 hover:border-green-500 hover:bg-green-500/10"
+                    >
+                      {app.icon}
+                      <div
+                        id="welcome"
+                        className="flex flex-row justify-between gap-6 md:flex-col xl:flex-row"
+                      >
+                        <div>
+                          <p className="text-white">{app.title}</p>
+                          <p className="text-gray-400">{app.description}</p>
+                        </div>
+                        <Image
+                          src={"/arrow-link-icon.svg"}
+                          alt="link icon"
+                          width={75}
+                          height={75}
+                          className="w-12 border border-green-500 bg-[#898989]/5 p-3 hover:bg-green-500/10"
+                        />
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
-          <div className="flex w-full justify-end">
-            <CountUpArea />
-          </div>
-        </div>
-        <div className="relative flex h-96 flex-col items-center justify-center border-b border-gray-500 p-4 md:h-full lg:w-[45%] lg:flex-row lg:border-none lg:p-0">
-          <div className="animate-fade-in md:min-h-[600px]">
-            <Animation />
-          </div>
-
-          <Link
-            className="absolute bottom-0 mb-4 hidden w-full items-center justify-center border border-gray-500 bg-black/50 px-5 py-3 hover:border-gray-500 hover:bg-black/70 hover:text-gray-200 md:flex lg:bottom-8 lg:left-8 lg:mb-0 lg:w-auto lg:justify-start"
-            href="#welcome"
-          >
-            View More
-            <Image
-              alt="Community icon"
-              className="ml-1 w-5"
-              height={75}
-              src="/arrow-down-icon.svg"
-              width={75}
-            />
-          </Link>
-        </div>
-      </div>
-
-      <div className="flex justify-center border-t border-gray-500">
-        <div className="flex w-full max-w-screen-2xl flex-col md:flex-row">
-          {applicationsList.map((app) => {
-            return (
-              <Link
-                className="w-full border-b border-gray-500 p-8 px-4 last:border-none hover:bg-black/20 hover:text-gray-300 lg:border-b-0 lg:border-l lg:border-r lg:p-16 lg:py-16 lg:first:border-none"
-                href={app.href}
-                key={app.title}
-                target={app.target ? app.target : "_self"}
-              >
-                {app.icon}
-                <div
-                  className="mt-2 flex flex-row justify-between gap-6 md:flex-col xl:flex-row"
-                  id="welcome"
-                >
-                  <div>
-                    <p className="text-white">{app.title}</p>
-                    {handleDescription(app.description)}
-                  </div>
-                  <Image
-                    alt="link icon"
-                    className="w-12 border border-green-500 bg-black/50 p-3 hover:bg-black/70"
-                    height={75}
-                    src="/arrow-link-icon.svg"
-                    width={75}
-                  />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        )}
       </div>
     </div>
   );
